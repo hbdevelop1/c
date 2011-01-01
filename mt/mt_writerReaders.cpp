@@ -20,6 +20,12 @@ readers lock the resource;
 #include<mutex>
 #include<iostream>
 #include<fstream>
+#include<string>
+#include<cstring>
+#include <sstream>
+#include <atomic>
+
+#include<condition_variable>
 
 using namespace std;
 
@@ -27,9 +33,9 @@ using namespace std;
 void writing(mutex &);
 void reading(mutex &);
 
-const int g_chunck = 200;
-char shared_buffer[g_chunck];
-
+const int g_chunck_max = 200;
+char shared_buffer[g_chunck_max];
+int g_chunck_current;
 
 template <class type_of_arg1>
 void output(type_of_arg1 a1)
@@ -62,11 +68,19 @@ public:
 }
 */
 
+condition_variable g_cv;
+condition_variable g_cv2;
+mutex g_mtx;
+int number_of_active_readers = 0;
+bool writer_is_writing = true;
+volatile atomic<bool> file_completed(false);
+
 int main()
 {
+    const int number_of_readers = 5;
+
     mutex mtx_output;
 
-    const int number_of_readers = 5;
     //create writer thread;
     thread w(writing, ref(mtx_output));
     thread r[number_of_readers];
@@ -103,37 +117,101 @@ void writing(mutex &mtx)
 
     while(size_still_to_write>0)
     {
-        int chunck = std::min(g_chunck, size_still_to_write);
+        g_chunck_current = std::min(g_chunck_max, size_still_to_write);
 
-        f.read(shared_buffer, chunck);
+        unique_lock<mutex> lck(g_mtx);
+        while(number_of_active_readers>0)
+        {
+            output("writer is going to sleep\n");
+            g_cv.wait(lck);
+        }
 
-        if(size_still_to_write == chunck)
+        writer_is_writing=true;
+        lck.unlock();
+
+
+        f.read(shared_buffer, g_chunck_current);
+
+        if(size_still_to_write == g_chunck_current)
         { //the last small chunck should be null terminated, otherwise we see the left over from the previous content
             shared_buffer[size_still_to_write]=0;
         }
 
-        size_still_to_write -= chunck;
+        lck.lock();
+        writer_is_writing=false;
+        output("writer is notifying everybody\n");
+        g_cv.notify_all();
+        lck.unlock();
 
 
+        size_still_to_write -= g_chunck_current;
+
+/*
         //cout<<"writer thread "<<std::this_thread::get_id()<<endl;
         unique_lock<mutex> u(mtx);
         //output("writer thread ",std::this_thread::get_id(),"\n");
         //output(shared_buffer);
-        cout << shared_buffer;
+        //cout << shared_buffer;
         u.unlock();
         this_thread::sleep_for(std::chrono::milliseconds(5));
+        */
     }
+
+    file_completed=true;
 }
 
 void reading(mutex &mtx)
 {
-    int i=10;
-    while(--i)
+    stringstream sfilename;//in out by default
+    sfilename
+            <<"mt/temp/mt_writerReaders_data_"
+           <<std::this_thread::get_id();
+
+    //char filename[100]; sfilename>>filename; //can;t output to a string object
+    string filename=sfilename.str(); //doesn't suppor >>string
+
+    unique_lock<mutex> u(mtx);
+    cout<<filename<<endl;
+    u.unlock();
+
+    ofstream f(filename, ofstream::binary|ofstream::trunc);
+
+/*
+    char buffer[]="this is a text";
+    f.write(buffer,strlen(buffer));
+    f.close();
+*/
+
+    while(file_completed==false)
     {
+        unique_lock<mutex> lck(g_mtx);
+        while(writer_is_writing)
+        {
+            output("reader ", std::this_thread::get_id()," is going to sleep\n");
+            g_cv2.wait(lck);
+        }
+
+        ++number_of_active_readers;
+        lck.unlock();
+
+
+        f.write(shared_buffer,g_chunck_current);
+
+
+        lck.lock();
+        --number_of_active_readers;
+        if(number_of_active_readers==0)
+        {
+            output("reader ", std::this_thread::get_id()," is notifying writer\n");
+            g_cv.notify_one();
+        }
+        lck.unlock();
+/*
         //cout<<"reader thread "<<std::this_thread::get_id()<<endl;
         unique_lock<mutex> u(mtx);
-        output("reader thread ",std::this_thread::get_id(),"\n");
+        //output("reader thread ",std::this_thread::get_id(),"\n");
         u.unlock();
         this_thread::sleep_for(std::chrono::milliseconds(5));
+        */
     }
 }
