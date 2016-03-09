@@ -5,7 +5,7 @@ FLAG2=-Wall -std=c++11
 LIBS = -lpthread
 
 compile:
-	g++ -ggdb $(FLAG2) $(INCLUDE) $(LIBDIR) mt_recursive_lock.cpp -o code $(LIBS) 
+	g++ -ggdb $(FLAG2) $(INCLUDE) $(LIBDIR) exceptions/except01.cpp -o e $(LIBS) 
 
 pp:
 	g++ -ggdb $(FLAG2) -E mt_recursive_lock.cpp -o code.i
