@@ -16,18 +16,13 @@ int count = 0;
 
 void watch_count(int idp)	
 {	
-	cout << "watch_count(): Thread " << idp << " 1 " << endl;	
 	std::unique_lock<std::mutex> lck(mtx);
-	cout << "watch_count(): Thread " << idp << " 2 " << endl;	
-	mtx.lock();	
-	cout << "watch_count(): Thread " << idp << " 3 " << endl;	
 	while (count <= WATCH_COUNT) 
 	{	
 		cout << "watch_count(): Thread " << idp << " might block and Count is " << count << endl;	
 		cv.wait(lck);	
 		cout << "watch_count(): Thread " << idp << " awoke and Count is " << count << endl;	
 	}	
-	mtx.unlock();	
 	cout << "watch_count(): Thread " << idp << " ended"<<endl;
 }
 
@@ -35,12 +30,13 @@ void inc_count(int idp)
 {	
 	for (int i =0; i < TCOUNT; i++) 
 	{	
-		mtx.lock();	
+		//mtx.lock();
+		std::unique_lock<std::mutex> lck(mtx);	
 		count++;	
 		cout << "inc_count(): Thread "<< idp << ", old count " << count - 1<< ", new count "<< count << endl;	
 		if (count == WATCH_COUNT)
 		   cv.notify_all();	
-		mtx.unlock();	
+		//mtx.unlock();	
 	}	
 	cout << "inc_count(): Thread "<< idp << " ended" << endl;	
 }
