@@ -45,8 +45,7 @@ public:
 //	  throw 'c'; 
   }
 };
-
-
+ 
 int main() 
 {
 	shared_ptr<char> p (new char[0xFFFF0000]);
