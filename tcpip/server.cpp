@@ -43,7 +43,8 @@ int main(int argc, char *argv[])
     memset(&serv_addr, '0', sizeof(serv_addr));
 
     serv_addr.sin_family = AF_INET; //the family/domain
-    serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);//the interface to listen on (in case the system has multiple interfaces to network)
+    serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);//listen to all ip addresses/interfaces 
+    //(in case the system has multiple interfaces on the network because wired interface has an IP different from the wireless interface)
     serv_addr.sin_port = htons(5000); //the port on which the server will wait for the client requests to come.
 
     bind(listenfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr)); 
