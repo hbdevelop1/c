@@ -1,7 +1,11 @@
 /*
 a thread is created for each client.
 the new thread is push to the v_threads
-I need to reuse ended threads.
+Reuse ended threads. thanks to thread::detach
+
+usage: launch the server (this file's output) on a terminal
+launch the client on a another.
+server and client connect, server send the current time to client
 */
 
 
@@ -19,6 +23,7 @@ I need to reuse ended threads.
 #include <iostream> 
 #include <thread> 
 #include <vector> 
+#include <algorithm> 
 using namespace std;
 
 void fn_sendtime(int connfd);
@@ -63,10 +68,35 @@ int main(int argc, char *argv[])
         //it is awaiken when the three way TCP handshake* is complete for an incoming client request
         // connfd is the socket descriptor representing the client socket.
 
-    	//create thread;
-    	v_threads.push_back(std::thread(fn_sendtime,connfd)); 
+        bool first_message_done = false;
+        //find (get an iterator to) the first element in v_threads that is !joinable
+        auto iterator_th = find_if(begin(v_threads), end(v_threads),[&first_message_done](const auto & th)
+												        {
+												        	if(!first_message_done)
+												        	{
+												        		cout << "looking for a free thread \n";
+												        		first_message_done= true;
+												        	}
+												        	bool free = !th.joinable();
+												        	cout << "thread " << th.get_id() << " is";
+												        	free? cout << " free." << endl : cout << " not free." << endl;
+												        	return free;
+												        } );
+		if(iterator_th != v_threads.end())
+		{
+			*iterator_th = std::thread(fn_sendtime,connfd);
+			iterator_th->detach(); // <--------- important otherwise thread will not be reused next time even if it has ended
+    		cout << "Server: thread " << v_threads.size() << " is reused for the new client connection ...\n";
+		}
+		else
+		{
+	    	//create thread;
+	    	v_threads.push_back(std::thread(fn_sendtime,connfd));
+	    	auto iterator_th = v_threads.end()-1 ;
+	    	iterator_th->detach();  // <--------- important otherwise thread will not be reused next time even if it has ended
+	    	cout << "Server: new thread for the client in connection ...\n";
+	    }
 
-    	cout << "Server: client " << v_threads.size() << " is in connection ...\n";
 
 
     	//loop back;
