@@ -1,10 +1,11 @@
 
 #include <iostream>
 #include <memory>
+#include <cstring>
 
 using namespace std;
 
-template<int size=10>
+template<int size=7>
 ostream& operator<<(ostream& o, int *p)
 {
     for(int i=0; i<size; ++i)
@@ -12,7 +13,7 @@ ostream& operator<<(ostream& o, int *p)
     return o;
 }
 
-template<int size=10>
+template<int size=7>
 ostream& operator<<(ostream& o, std::unique_ptr<int[]> & p)
 {
     for(int i=0; i<size; ++i)
@@ -20,8 +21,12 @@ ostream& operator<<(ostream& o, std::unique_ptr<int[]> & p)
     return o;
 }
 
-std::unique_ptr<int[]> g_ordered(new int[10]);
+#define _debug_
+
+std::unique_ptr<int[]> g_ordered;
 int g_ordered_k;
+
+
 
 
 void merge(int array1[], int array1_size, int array2[], int array2_size)
@@ -30,7 +35,7 @@ void merge(int array1[], int array1_size, int array2[], int array2_size)
     {
         return;
     }
-
+#ifdef _debug_
     cout << "merging :{";
     for(int i=0; i<array1_size; ++i)
     {
@@ -42,6 +47,7 @@ void merge(int array1[], int array1_size, int array2[], int array2_size)
         cout << array2[i] << ",";
     }
     cout << "}" << endl;
+#endif _debug_
 
     if(array1_size<=0)
     {
@@ -77,9 +83,10 @@ void mergeSort(int Array[], int array_size)
 
     mergeSort(array1, mid);
     mergeSort(array2, array_size-mid);
-    //cout << "mid ="<<mid << ", array_size-mid ="<<array_size-mid<< endl;
 
     g_ordered_k=0;
+    for(int i=0; i<array_size; ++i)        memset(g_ordered.get(), 0, 10*sizeof(int));
+
     merge(array1, mid, array2, array_size-mid);
 
     for(int i=0; i<array_size; ++i)
@@ -87,17 +94,24 @@ void mergeSort(int Array[], int array_size)
         array1[i]=g_ordered[i];
     }
 
-    //cout << "temp result:"<< g_ordered << endl;
+#ifdef _debug_
+    cout << "temp result:"<< g_ordered << endl;
+#endif _debug_
 }
 
 
 int main(int argc, char ** argv)
 {
-    int array[]={13,6,2,9,1,5,0};
+    int g_array[]={13,6,2,9,1,5,0};
 
-    g_ordered_k=0;
-    mergeSort(array, sizeof(array)/sizeof(int));
-    cout << g_ordered << endl;
+    int array_size = sizeof(g_array)/sizeof(int);
+
+    g_ordered = std::unique_ptr<int[]>(new int[array_size]);
+
+    mergeSort(g_array, array_size);
+
+
+    cout << g_array<< endl;
 
     return 0;
 }

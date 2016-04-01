@@ -17,7 +17,7 @@ file=algo/binarySearch.cpp
 file=algo/lexical_analyzer.cpp
 file=algo/sorting_heapsort.cpp
 file=algo/sorting_mergesort.cpp
-file=algo/sorting_quicksort.cpp
+#file=algo/sorting_quicksort.cpp
 #file=task4.cpp
 compile:
 	g++ -ggdb $(FLAG2) $(INCLUDE) $(LIBDIR) $(file) -o e $(LIBS) 
