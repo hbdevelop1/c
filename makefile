@@ -10,9 +10,15 @@ LIBS = -lpthread
 #file=modern.cpp
 clientfile=tcpip/client.cpp
 serverfile=tcpip/server.cpp
-#file=algo/binarySearch.cpp
 file=algo/arithmeticProgression.cpp
-
+file=class_sizeof.cpp
+file=function_pointer.cpp
+file=algo/binarySearch.cpp
+file=algo/lexical_analyzer.cpp
+file=algo/sorting_heapsort.cpp
+file=algo/sorting_mergesort.cpp
+file=algo/sorting_quicksort.cpp
+#file=task4.cpp
 compile:
 	g++ -ggdb $(FLAG2) $(INCLUDE) $(LIBDIR) $(file) -o e $(LIBS) 
 
