@@ -9,7 +9,7 @@
 #include <memory>
 using namespace std;
 
-int main()
+int main7()
 {
     int n=6;
 
@@ -102,7 +102,7 @@ int main3()
 
 }
 
-int main1()
+int main()
 {
     int n=6;
 
@@ -112,8 +112,9 @@ int main1()
     {
         fill_n(line.begin()    , n-i,' ');
         fill_n(line.begin()+n-i, i  , '#');
-        copy(line.begin(), line.end(), std::ostream_iterator<char>(std::cout));
-        cout << endl;
+        auto it = copy(line.begin(), line.end(), std::ostream_iterator<char>(std::cout));
+        //cout << endl;
+        *it='\n';
     }
 
 }
