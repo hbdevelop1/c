@@ -21,8 +21,54 @@ using namespace std;
 //   <- the difference is that basic_string is geared toward string of char, wchar, ... like it has a c_str function that return chatT*
 
 
-
 #if 0
+#define hmin(a,b) ((a)<=(b)?(a):(b))
+int main()
+{
+    int aa[]={20,30,40};
+    int *p=aa;
+
+    //int e = *p++;
+
+    int b= 50;
+    int ret = hmin(*++p,b);
+
+    printf("*p == %d\n",*p);
+
+    return 0;
+}
+
+
+float TurnIntoZeroPointFloat(int number)
+{
+    if(number==0)
+        return 0.f;
+
+    stringstream ss;
+    if(number<0)
+    {
+        ss<<"-";
+        number *= -1;
+    }
+
+    ss << "0.";
+    ss << number;
+
+    float value;
+    ss>> value;
+
+    return value;
+}
+
+int main26()
+{
+    float ret = TurnIntoZeroPointFloat(4962);
+    cout << ret << endl;
+return 0;
+
+}
+
+
 int main25()
 {
     int v = 4;
