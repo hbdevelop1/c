@@ -2,8 +2,16 @@
 
 using namespace std;
 
-
+//get the max float value
 int main ()
+{
+    int max_rep = 0x7FFFFFFF;    
+    float a = *reinterpret_cast<float*>(&max_rep);
+    cout << "a="<<a<< endl;
+    return 0;
+}
+
+int main6 ()
 {
     float a =0.5f; //=0x3F000000
     float b =0.25f; //expected=0x3E000000 got=0x3E800000

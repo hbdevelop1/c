@@ -44,7 +44,7 @@ template <> struct A<Edge>:public A<char>
 };
 
 
-int main()
+int main47()
 {
 
     A<int> a;
@@ -63,4 +63,78 @@ int main()
     //ae.f(e);
     char v81 = ae(e);
     cout << hex<<(int)v81 << endl;
+	
+	return 0;
+}
+
+
+template <class T> struct B
+{
+    void f(T a)
+    {
+        cout << a << endl;
+    }
+    void f1(float a)
+    {
+        cout << "int version:"<<a << endl;
+    }
+};
+
+int main83()
+{
+	B<int> b;
+	//b.f(4);
+	
+	B<char> c;
+	c.f('4');
+
+	B<float> c2;
+	c2.f(4.f);
+	
+	return 0;
+}
+
+template<typename _Tp, typename _Alloc >
+class hvector
+{
+public:
+    hvector()
+    {
+        cout << "template<typename _Tp, typename _Alloc >"<<endl;
+        }
+ };
+template <class Allocinting> 
+class hvector<bool, Allocinting> 
+{
+public:
+    
+    hvector()
+    {
+        cout << "class hvector<bool, Allocinting> "<<endl;
+        }
+ };
+
+int main117()
+{
+    hvector<A<int>,B<int>> v1;
+    hvector<bool,B<int>> v2;
+    
+    
+    return 0;
+}
+
+class big
+{
+public:
+    big() {cout << "big constructor"<<endl;}
+    template<int N> void print() { cout << "print "<<N<<endl;}
+    template<int N> static void print2() { cout << "static print "<<N<<endl;}
+};
+
+int main134()
+{
+    big b;
+    b.print<7>();
+    big::print2<7>();
+    return 0;
 }

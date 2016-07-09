@@ -8,7 +8,7 @@ using namespace std;
 template<class T1>
 void fun(T1 t1)
 {
-    cout << t1 << endl;
+    cout << t1;
 }
 
 template<class T1, typename... Ts>
@@ -24,6 +24,10 @@ int main()
     fun(4);
     char t=66;
     fun(t);
-    char & rt=t; fun(t,rt,66,2);
+    ostream o = endl(cout);
+    //fun(t,o);
+
+    char & rt=t;
+    fun(t,rt,66,2);
 }
 

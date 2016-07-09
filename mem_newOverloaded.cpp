@@ -7,6 +7,8 @@ using namespace std;
 class Object
 {
 public:
+    virtual ~Object(){}
+    
     void *operator new(size_t s)
     {
         cout<<"operator new called for "<<s<<" bytes"<<endl;
@@ -30,6 +32,7 @@ public:
       cout <<"my delete[] :"<<hex<<p<<endl;
       ::operator delete[](p);
     }    
+
 };
 
 class Point : public Object
@@ -37,6 +40,8 @@ class Point : public Object
     int x;
     int y;
 public:
+
+Point(){}
     Point(int _x, int _y):x(_x),y(_y){}
     friend ostream& operator<<(ostream& os, const Point & point);
 /*
@@ -69,4 +74,9 @@ int main()
     cout << *pi<< " at "<<pi<< endl;
     delete pi;
     delete po;
+    
+    
+    Point *pa=new Point[3];
+    delete[] pa;
+     
 }

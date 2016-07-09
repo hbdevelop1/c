@@ -33,6 +33,39 @@ ostream& operator<<(ostream& o, const Point &)
 		}
     };
 
+    class Derived_vprivate : private Derived_v 
+	{
+	public:
+		void f()
+		{
+			//b=1;
+			//r=1;
+			//v=1;
+		}
+    };
+
+    class Derived_vprotected : protected Derived_v 
+	{
+	public:
+		void f()
+		{
+			//b=1;
+			//r=1;
+			//v=1;
+		}
+    };
+
+    class Derived_vpublic : public Derived_v 
+	{
+	public:
+		void f()
+		{
+			//b=1;
+			//r=1;
+			//v=1;
+		}
+    };
+
     class Derived_r : protected Base 
 	{
 	public:
