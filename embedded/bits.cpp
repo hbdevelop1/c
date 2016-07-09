@@ -28,7 +28,7 @@ void output()
 
 }
 
-int main()
+int main31()
 {
     unsigned int v=3; // count the number of bits set in v
     unsigned int c; // c accumulates the total bits set in v
@@ -57,3 +57,47 @@ int main43()
     return 0;
 }
 
+
+int main()
+{
+    uint8_t a=8;
+    uint8_t b=7;
+    uint8_t c=12;
+    uint8_t d=14;
+
+    uint8_t e=13;
+    uint8_t f=3;
+    uint8_t g=5;
+    uint8_t h=10;
+
+    unsigned char r=0;
+    r^=a;
+    r^=b;
+    r^=c;
+    r^=d;
+    r^=e;
+    r^=f;
+    r^=g;
+    r^=h;
+
+    printf("r=0x%01X\n",r);
+
+    r=0;
+    r^=d;
+    r^=a;
+    r^=f;
+    r^=b;
+    r^=c;
+    r^=g;
+    r^=e;
+    r^=h;
+
+    printf("r=0x%01X\n",r);
+
+    uint8_t arr[]={8,7,12,14,13,3,5,10};
+    uint32_t *p1= (uint32_t *)arr;
+    uint32_t r1=0;
+    //r1=
+
+    return 0;
+}
