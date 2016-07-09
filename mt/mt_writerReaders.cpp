@@ -10,7 +10,8 @@ readers lock the resource;
 /*
  todo
  -get a function to accept std::endl as an argument. use output below or modern_template_variadic.cpp
-
+ -writer waits for reader threads to get ready. but waht ifthe writer just dumps more than one chunck before readers know it
+ there should be some variable to stop the writer from witing any further until all readers have read. solution:cv
 
 
  * */
@@ -74,6 +75,8 @@ mutex g_mtx;
 int number_of_active_readers = 0;
 bool writer_is_writing = true;
 volatile atomic<bool> file_completed(false);
+const int number_of_readers = 5;
+int number_of_readers_to_init = number_of_readers;
 
 int main()
 {
@@ -114,6 +117,15 @@ void writing(mutex &mtx)
     f.seekg(0, f.beg);
 
     signed int size_still_to_write=sizeoffile;
+
+    unique_lock<mutex> lck(g_mtx);
+    while(number_of_readers_to_init) //wait for readers to be ready for reading data
+    {
+        g_cv2.wait(lck);
+    }
+    lck.unlock();
+
+    output("writer is starting\n");
 
     while(size_still_to_write>0)
     {
@@ -181,6 +193,11 @@ void reading(mutex &mtx)
     f.write(buffer,strlen(buffer));
     f.close();
 */
+
+    unique_lock<mutex> lck(g_mtx);
+    --number_of_readers_to_init;
+    g_cv2.notify_one();//wake up teh writer to check if number_of_readers_to_init reached 0
+    lck.unlock();
 
     while(file_completed==false)
     {
