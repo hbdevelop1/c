@@ -1,21 +1,4 @@
-#include<math.h>
-#define Zero 1.e-5
-
-struct vec3
-{
-    double x,y,z;
-
-    vec3(double _x=0, double _y=0, double _z=0):x(_x), y(_y), z(_z){}
-    friend vec3 cross(const vec3 & v1, const vec3 & v2);
-    friend double dot(const vec3 & v1, const vec3 & v2);
-    bool operator==(const vec3 & v);
-    friend vec3 operator-(const vec3 & v1, const vec3 & v2);
-    friend ostream& operator<<(ostream& os, const vec3 & v);
-    const vec3& operator*=(const double f);
-    double lengthSquared();
-    double length();
-    void normalize();
-};
+#include "vec3.h"
 
 bool vec3::operator==(const vec3 & v)
 {
@@ -26,6 +9,12 @@ vec3 operator-(const vec3 & v1, const vec3 & v2)
 {
     return vec3(v1.x-v2.x,v1.y-v2.y,v1.z-v2.z);
 }
+
+vec3 operator+(const vec3 & v1, const vec3 & v2)
+{
+    return vec3(v1.x+v2.x,v1.y+v2.y,v1.z+v2.z);
+}
+
 vec3 cross(const vec3 & v1, const vec3 & v2)
 {
     return vec3(
@@ -49,7 +38,7 @@ double vec3::length()
 {
     double mag = lengthSquared();
     double res = mag<=Zero ? 0:sqrt(mag);
-        return res;
+    return res;
 }
 
 void vec3::normalize()
@@ -57,8 +46,13 @@ void vec3::normalize()
     double l=length();
     double denominator;
     if(l<Zero)
+    {
         denominator=0.;
-    denominator=1/l;
+    }
+    else
+    {
+        denominator=1/l;
+    }
 
     *this *= denominator;
 }
@@ -71,8 +65,27 @@ const vec3& vec3::operator*=(const double f)
     return *this;
 }
 
+vec3 operator*(const vec3 & v, double f)
+{
+    vec3 r;
+    r.x=f*v.x;
+    r.y=f*v.y;
+    r.z=f*v.z;
+    return r;
+}
+
+vec3 operator*(double f, const vec3 & v)
+{
+    vec3 r;
+    r.x=f*v.x;
+    r.y=f*v.y;
+    r.z=f*v.z;
+    return r;
+}
+
 ostream& operator<<(ostream& os, const vec3 & v)
 {
-    os << "("<<v.x<<","<<v.y<<","<<v.z<<")" << endl;
+    os << "("<<v.x<<","<<v.y<<","<<v.z<<")";
     return os;
 }
+
