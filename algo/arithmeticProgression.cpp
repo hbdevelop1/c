@@ -23,7 +23,7 @@ bool IsMissing(int array[], int d, int lb, int ub)
 //to do: negative elements, decreasing serie, 
  
 	int nbrofelements_inarray = ub - lb + 1;
-	int nbrofelements_intheory = (array[ub]-array[lb])/d + 1;
+	int nbrofelements_intheory = 1+(array[ub]-array[lb])/d;
 
 	cout << "array's size be " << nbrofelements_intheory << ", and it is " << nbrofelements_inarray << endl;
 
