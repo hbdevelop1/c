@@ -1,6 +1,7 @@
 #INCLUDE = -I/usr/include/
 #LIBDIR  = -L/usr/lib -L/usr/i686-pc-cygwin/sys-root/usr/lib/
-LIBS = -lpthread
+LIBS = -lpthread 
+assmbly_file=$(file).asmbly
 
 #file=exceptions/except01.cpp
 #file=mt_condition_var1.cpp
@@ -8,7 +9,6 @@ LIBS = -lpthread
 
 clientfile=tcpip/client.cpp
 serverfile=tcpip/server.cpp
-file=algo/arithmeticProgression.cpp
 file=class_sizeof.cpp
 file=function_pointer.cpp
 file=algo/binarySearch.cpp
@@ -78,17 +78,79 @@ file=mem_newOverloaded.cpp
 #file=modern.cpp
 file=modern_for_range2.cpp
 file=modern_move01.cpp
+file=cattleelktrajectories.cpp
 file=exercises.cpp
+file=meta/m1.cpp
+file=meta/t2.cpp
 
-clientfile=mt_ATM/ATMClient.cpp
-serverfile=mt_ATM/ATMServer.cpp
+file=fsm/Game.cpp fsm/main.cpp
 
+#INCLUDE = -I/home/hassan/hassan/assembla/boost_1_61_0.tar/boost_1_61_0 
+file=event/disconnect_and_block.cpp
+
+file=SDL/sdl01.cpp
+
+path=sdl/lesson01
+file=$(path)/lesson01.cpp
+path=
+#sdl/05_optimized_surface_loading_and_soft_stretching/
+file=$(path)05_optimized_surface_loading_and_soft_stretching.cpp
+
+file=$(path)lesson05.cpp
+file=$(path)08_geometry_rendering.cpp 
+
+INCLUDE_SDL2 = -I/usr/include/SDL2
+INCLUDE_SDL = -I/usr/include/SDL
+#-I/usr/include/SDL2
+file=10_color_keying.cpp
+file=ui_map.cpp LTexture.cpp 
+file=23_advanced_timers.cpp
+
+
+LIBS_SDL += -lSDL -lSDL_mixer -lSDL_ttf -lSDL_image
+# /usr/lib/x86_64-linux-gnu/libSDL*
+
+LIBS_SDL2 += -lSDL2 -lSDL2_image -lSDL2_ttf
+LIBDIR += -L/usr/lib/x86_64-linux-gnu 
 
 COMPILER=g++
-FLAG2=-Wall -std=c++14
+FLAG2=-Wall -std=c++14 
+
+file=meta/t3.cpp
+file=stl_iterator2.cpp
+file=iterator.cpp
+file=qd/t2.cpp
+file=algo/cq008.cpp
+file=algo/arithmeticProgression.cpp
+file=inheritance_multiple.cpp
+file=glsl/s1.cpp
+file=algo/wg_visible_nodes.cpp
+file=algo2/perm.cpp
+file=algo/getTwoOurOfThree2.cpp
+file=algo2/kthnumber.cpp
+file=embedded/tail_factorial.cpp
 
 compile:
 	$(COMPILER) -ggdb3 $(FLAG2) $(INCLUDE) $(LIBDIR) $(file) -o e $(LIBS)
+
+ssdl2:
+	$(COMPILER) -ggdb3 $(FLAG2) $(INCLUDE_SDL2) $(LIBDIR) $(file) -o $(path)e $(LIBS_SDL2) 
+
+ssdl:
+	$(COMPILER) -ggdb3 $(FLAG2) $(INCLUDE) $(LIBDIR) $(file) -o $(path)e $(LIBS) `sdl-config --cflags --libs`
+
+test01:
+	$(COMPILER) 01_hello_SDL.cpp -w -lSDL2 -o e
+
+
+
+compile2:
+	$(COMPILER) -ggdb3 $(FLAG2) $(INCLUDE) $(LIBDIR) $(file) -o $(path)/e $(LIBS)
+	ln -s $(path)/e e
+
+
+clientfile=mt_ATM/ATMClient.cpp
+serverfile=mt_ATM/ATMServer.cpp
 
 client:
 	g++ -ggdb3 $(FLAG2) $(INCLUDE) $(LIBDIR) $(clientfile) -o c $(LIBS) 
@@ -99,3 +161,9 @@ server:
 pp:
 	g++ -ggdb3 $(FLAG2) $(INCLUDE) $(LIBDIR) -E $(file) -o code.i
 
+inter:
+	$(COMPILER) -ggdb3 $(FLAG2) -save-temps=obj $(INCLUDE) $(LIBDIR) $(file) -o e $(LIBS)
+	
+#generate assembly
+assem:
+	$(COMPILER) -ggdb3 -S $(FLAG2) $(INCLUDE) $(LIBDIR) $(file) -o $(assmbly_file) $(LIBS)
