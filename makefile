@@ -129,9 +129,22 @@ file=algo2/perm.cpp
 file=algo/getTwoOurOfThree2.cpp
 file=algo2/kthnumber.cpp
 file=embedded/tail_factorial.cpp
+file=algo/string_rotator.cpp
+file=template_pointerspecialization.cpp
+file=template_pointer_only.cpp
+file=template_pointer.cpp
+file=ogl/vectorrotation/lesson5.c ogl/vectorrotation/soho/Matrices.cpp ogl/vectorrotation/lesson05_objects.cpp
 
+ogl:
+	$(COMPILER) -ggdb3 -Wall -I/usr/include/ -o o -L/usr/X11R6/lib $(file) -lX11 -lXi -lXmu -lglut -lGL -lGLU -lm
+clean:
+	rm e.* a.out
+	
 compile:
 	$(COMPILER) -ggdb3 $(FLAG2) $(INCLUDE) $(LIBDIR) $(file) -o e $(LIBS)
+
+compileogl:
+	$(COMPILER) -ggdb3 $(FLAG2) $(INCLUDE) $(LIBDIR) $(file) -o e $(LIBS) -lX11 -lXi -lXmu -lglut -lGL -lGLU -lm
 
 ssdl2:
 	$(COMPILER) -ggdb3 $(FLAG2) $(INCLUDE_SDL2) $(LIBDIR) $(file) -o $(path)e $(LIBS_SDL2) 
